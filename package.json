@@ -1,9 +1,9 @@
 {
-  "name": "code-oss-dev",
-  "version": "1.110.0",
-  "distro": "fdfb55bde654559f3a3baea839e9797107b4e92e",
+  "name": "sagentai",
+  "version": "0.1.0",
+  "distro": "sagentai-dev",
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "SAgentai Team"
   },
   "license": "MIT",
   "main": "./out/main.js",
