@@ -238,6 +238,133 @@ jobs:
 
           Write-Host "Release $TagName published successfully!"
 
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install native build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot rpm libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: x64
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Electron
+        run: npm run electron
+
+      - name: Install built-in extensions
+        run: node build/lib/builtInExtensions.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Linux (x64)
+        run: npx gulp vscode-linux-x64-min
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create tar.gz archive
+        run: |
+          cd ..
+          if [ -d "VSCode-linux-x64" ]; then
+            tar -czf SAgentai-linux-x64.tar.gz VSCode-linux-x64
+            echo "Created SAgentai-linux-x64.tar.gz"
+          else
+            echo "ERROR: VSCode-linux-x64 directory not found"
+            ls -la ..
+            exit 1
+          fi
+
+      - name: Build .deb package
+        run: |
+          npx gulp vscode-linux-x64-prepare-deb
+          npx gulp vscode-linux-x64-build-deb
+
+      - name: Build .rpm package
+        run: |
+          npx gulp vscode-linux-x64-prepare-rpm
+          npx gulp vscode-linux-x64-build-rpm
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(node -e "console.log(require('./package.json').version)")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Stage release artifacts
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          STAGING=".build/release-staging"
+          mkdir -p "$STAGING"
+
+          # tar.gz
+          cp ../SAgentai-linux-x64.tar.gz "$STAGING/SAgentai-$VERSION-linux-x64.tar.gz"
+
+          # .deb
+          DEB=$(find .build/linux/deb -name '*.deb' -print -quit)
+          if [ -n "$DEB" ]; then
+            cp "$DEB" "$STAGING/SAgentai-$VERSION-linux-x64.deb"
+          fi
+
+          # .rpm
+          RPM=$(find .build/linux/rpm -name '*.rpm' -print -quit)
+          if [ -n "$RPM" ]; then
+            cp "$RPM" "$STAGING/SAgentai-$VERSION-linux-x64.rpm"
+          fi
+
+          echo "Staged artifacts:"
+          ls -lh "$STAGING"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: .build/release-staging/*
+          retention-days: 30
+
+      - name: Upload to GitHub Release
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          if [[ "${{ github.ref }}" == refs/heads/* ]]; then
+            TAG_NAME="v$VERSION"
+          else
+            TAG_NAME="${{ github.ref_name }}"
+          fi
+
+          sleep 15
+          if ! gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release create "$TAG_NAME" --title "SAgentai $VERSION" --notes "Multi-platform build" --latest || true
+          fi
+
+          for f in .build/release-staging/*; do
+            echo "Uploading $f"
+            gh release upload "$TAG_NAME" "$f" --clobber
+          done
+
   build-macos:
     name: Build macOS
     runs-on: macos-latest
