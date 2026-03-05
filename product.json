@@ -139,6 +139,18 @@
 		"tokenEntitlementUrl": "https://api.github.com/copilot_internal/v2/token",
 		"mcpRegistryDataUrl": "https://api.github.com/copilot/mcp_registry"
 	},
+	"extensionsGallery": {
+		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+		"itemUrl": "https://marketplace.visualstudio.com/items",
+		"controlUrl": "",
+		"extensionUrlTemplate": "https://marketplace.visualstudio.com/items?itemName={publisher}.{name}",
+		"resourceUrlTemplate": "https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}",
+		"nlsBaseUrl": ""
+	},
+	"defaultGalleryExtensions": [
+		"salesforce.salesforcedx-vscode",
+		"GitHub.copilot-chat"
+	],
 	"trustedExtensionAuthAccess": {
 		"github": ["GitHub.copilot-chat"],
 		"github-enterprise": ["GitHub.copilot-chat"]

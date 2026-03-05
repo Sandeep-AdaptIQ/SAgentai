@@ -136,6 +136,7 @@ export interface IProductConfiguration {
 	readonly webExtensionTips?: readonly string[];
 	readonly languageExtensionTips?: readonly string[];
 	readonly trustedExtensionUrlPublicKeys?: IStringDictionary<string[]>;
+	readonly defaultGalleryExtensions?: readonly string[];
 	readonly trustedExtensionAuthAccess?: string[] | IStringDictionary<string[]>;
 	readonly trustedMcpAuthAccess?: string[] | IStringDictionary<string[]>;
 	readonly inheritAuthAccountPreference?: IStringDictionary<string[]>;

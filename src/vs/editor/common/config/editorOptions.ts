@@ -3415,7 +3415,7 @@ class EditorMinimap extends BaseEditorOption<EditorOption.minimap, IEditorMinima
 			size: 'proportional',
 			side: 'right',
 			showSlider: 'mouseover',
-			autohide: 'none',
+			autohide: 'mouseover',
 			renderCharacters: true,
 			maxColumn: 120,
 			scale: 1,
@@ -6153,7 +6153,7 @@ export const EditorOptions = {
 	)),
 	cursorSmoothCaretAnimation: register(new EditorStringEnumOption(
 		EditorOption.cursorSmoothCaretAnimation, 'cursorSmoothCaretAnimation',
-		'off' as 'off' | 'explicit' | 'on',
+		'on' as 'off' | 'explicit' | 'on',
 		['off', 'explicit', 'on'] as const,
 		{
 			enumDescriptions: [
@@ -6643,7 +6643,7 @@ export const EditorOptions = {
 	)),
 	smartSelect: register(new SmartSelect()),
 	smoothScrolling: register(new EditorBooleanOption(
-		EditorOption.smoothScrolling, 'smoothScrolling', false,
+		EditorOption.smoothScrolling, 'smoothScrolling', true,
 		{ description: nls.localize('smoothScrolling', "Controls whether the editor will scroll using an animation.") }
 	)),
 	stopRenderingLineAfter: register(new EditorIntOption(
