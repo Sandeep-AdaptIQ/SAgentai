@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="SAgentai"
+    Manufacturer="SAgentai"
+    Version="1.100.0.0"
+    UpgradeCode="017A62BE-4FDE-41C3-A34C-AA2E763915A7"
+    Scope="perMachine"
+    InstallerVersion="500"
+    Compressed="yes">
+
+    <SummaryInformation Description="SAgentai - AI Agent IDE" />
+
+    <MajorUpgrade
+      DowngradeErrorMessage="A newer version of [ProductName] is already installed."
+      Schedule="afterInstallInitialize" />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="SAgentaiIcon" SourceFile="!(bindpath.appdir)\SAgentai.exe" />
+    <Property Id="ARPPRODUCTICON" Value="SAgentaiIcon" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/Sandeep-AdaptIQ/SAgentai" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/Sandeep-AdaptIQ/SAgentai" />
+
+    <!-- Launch conditions -->
+    <Launch Condition="VersionNT64" Message="[ProductName] requires a 64-bit version of Windows." />
+
+    <Feature Id="Complete" Title="SAgentai" Description="SAgentai - AI Agent IDE" Level="1" AllowAbsent="no">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentRef Id="AppShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
+      <ComponentRef Id="PathEntry" />
+    </Feature>
+  </Package>
+
+  <!-- Directory structure -->
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="SAgentai" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppMenuFolder" Name="SAgentai" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+  </Fragment>
+
+  <!-- Application files from build output -->
+  <Fragment>
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <Files Include="**">
+        <Exclude Files="*.pdb" />
+      </Files>
+    </ComponentGroup>
+  </Fragment>
+
+  <!-- Start Menu shortcut -->
+  <Fragment>
+    <Component Id="AppShortcut" Directory="AppMenuFolder" Guid="1E8B5A3C-7D4F-4E9A-B2C1-6F8D0E3A5B7C">
+      <Shortcut Id="StartMenuShortcut"
+                Name="SAgentai"
+                Description="SAgentai - AI Agent IDE"
+                Target="[INSTALLFOLDER]SAgentai.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="SAgentaiIcon" />
+      <RemoveFolder Id="RemoveAppMenuFolder" On="uninstall" />
+      <RegistryValue Root="HKLM" Key="Software\SAgentai" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </Fragment>
+
+  <!-- Desktop shortcut -->
+  <Fragment>
+    <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="2F9C6B4D-8E5A-4F0B-C3D2-7A9E1F4B6C8D">
+      <Shortcut Id="DesktopShortcutLink"
+                Name="SAgentai"
+                Description="SAgentai - AI Agent IDE"
+                Target="[INSTALLFOLDER]SAgentai.exe"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="SAgentaiIcon" />
+      <RegistryValue Root="HKLM" Key="Software\SAgentai" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </Fragment>
+
+  <!-- Add to PATH -->
+  <Fragment>
+    <Component Id="PathEntry" Directory="INSTALLFOLDER" Guid="3A0D7C5E-9F6B-4A1C-D4E3-8B0F2A5C7D9E">
+      <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]bin" Permanent="no" Part="last" Action="set" System="yes" />
+      <RegistryValue Root="HKLM" Key="Software\SAgentai" Name="PathEntry" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+  </Fragment>
+</Wix>
