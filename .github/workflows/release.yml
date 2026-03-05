@@ -62,13 +62,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download Electron
-        run: npx gulp electron
+        run: npm run electron
 
       - name: Install built-in extensions
-        run: npx gulp install-builtin-extensions
+        run: node build/lib/builtInExtensions.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build client (package)
-        run: npx gulp vscode-win32-x64-min-ci
+        run: npx gulp vscode-win32-x64-min
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -258,26 +260,35 @@ jobs:
       - name: Install dependencies
         run: npm ci
         env:
-          npm_config_arch: x64
           ELECTRON_SKIP_BINARY_DOWNLOAD: 1
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download Electron
-        run: npx gulp electron
+        run: npm run electron
 
       - name: Install built-in extensions
-        run: npx gulp install-builtin-extensions
-
-      - name: Build macOS (x64)
-        run: npx gulp vscode-darwin-x64-archive
+        run: node build/lib/builtInExtensions.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build macOS (arm64)
-        run: npx gulp vscode-darwin-arm64-archive
+        run: npx gulp vscode-darwin-arm64-min
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create macOS archive
+        run: |
+          cd ..
+          if [ -d "VSCode-darwin-arm64" ]; then
+            cd VSCode-darwin-arm64
+            zip -Xry ../SAgentai-darwin-arm64.zip .
+            echo "Created SAgentai-darwin-arm64.zip"
+          else
+            echo "ERROR: VSCode-darwin-arm64 directory not found"
+            ls -la ..
+            exit 1
+          fi
 
       - name: Extract version
         id: version
@@ -304,10 +315,11 @@ jobs:
             gh release create "$TAG_NAME" --title "SAgentai $VERSION" --notes "macOS & Windows Builds" --latest || true
           fi
 
-          # Upload zips created by the archive task in the parent dir
-          for file in ../VSCode-darwin-*.zip; do
-            if [ -f "$file" ]; then
-              echo "Uploading $file"
-              gh release upload "$TAG_NAME" "$file" --clobber
-            fi
-          done
+          # Upload the macOS arm64 zip
+          ZIP_FILE="../SAgentai-darwin-arm64.zip"
+          if [ -f "$ZIP_FILE" ]; then
+            echo "Uploading $ZIP_FILE"
+            gh release upload "$TAG_NAME" "$ZIP_FILE" --clobber
+          else
+            echo "WARNING: macOS arm64 zip not found at $ZIP_FILE"
+          fi
