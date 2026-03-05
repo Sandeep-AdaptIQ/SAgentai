@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'release/**'
+      - 'main'
     tags:
       - 'v*'
   workflow_dispatch:
@@ -197,7 +198,7 @@ jobs:
           Write-Host "Release $TagName published successfully!"
 
       - name: Create Release (branch push)
-        if: startsWith(github.ref, 'refs/heads/release/') && !startsWith(github.ref, 'refs/tags/')
+        if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) && !startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -234,3 +235,79 @@ jobs:
           }
 
           Write-Host "Release $TagName published successfully!"
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: x64
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Electron
+        run: npx gulp electron
+
+      - name: Install built-in extensions
+        run: npx gulp install-builtin-extensions
+
+      - name: Build macOS (x64)
+        run: npx gulp vscode-darwin-x64-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build macOS (arm64)
+        run: npx gulp vscode-darwin-arm64-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(node -e "console.log(require('./package.json').version)")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Find and Upload Artifacts to Release
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          if [[ "${{ github.ref }}" == refs/heads/* ]]; then
+            TAG_NAME="v$VERSION"
+          else
+            TAG_NAME="${{ github.ref_name }}"
+          fi
+
+          # Give the Windows job a head start on creating the release so we don't race
+          sleep 10
+          if ! gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release create "$TAG_NAME" --title "SAgentai $VERSION" --notes "macOS & Windows Builds" --latest || true
+          fi
+
+          # Upload zips created by the archive task in the parent dir
+          for file in ../VSCode-darwin-*.zip; do
+            if [ -f "$file" ]; then
+              echo "Uploading $file"
+              gh release upload "$TAG_NAME" "$file" --clobber
+            fi
+          done
