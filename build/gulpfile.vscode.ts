@@ -338,7 +338,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			'vs/sessions/electron-browser/sessions.js'
 		]);
 
-		const src = gulp.src(out + '/**', { base: '.' })
+		const src = gulp.src(out + '/**', {  base: '.' , encoding: false })
 			.pipe(rename(function (path) { path.dirname = path.dirname!.replace(new RegExp('^' + out), 'out'); }))
 			.pipe(util.setExecutableBit(['**/*.sh']));
 
@@ -371,7 +371,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 		}
 
 		let packageJsonContents: string;
-		const packageJsonStream = gulp.src(['package.json'], { base: '.' })
+		const packageJsonStream = gulp.src(['package.json'], {  base: '.' , encoding: false })
 			.pipe(jsonEditor(packageJsonUpdates))
 			.pipe(es.through(function (file) {
 				packageJsonContents = file.contents.toString();
@@ -379,7 +379,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			}));
 
 		let productJsonContents: string;
-		const productJsonStream = gulp.src(['product.json'], { base: '.' })
+		const productJsonStream = gulp.src(['product.json'], {  base: '.' , encoding: false })
 			.pipe(jsonEditor({ commit, date: readISODate(out), checksums, version }))
 			.pipe(es.through(function (file) {
 				productJsonContents = file.contents.toString();
@@ -393,7 +393,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			: undefined;
 
 		const packageSubJsonStream = isInsiderOrExploration
-			? gulp.src(['package.json'], { base: '.' })
+			? gulp.src(['package.json'], {  base: '.' , encoding: false })
 				.pipe(jsonEditor((json: Record<string, unknown>) => {
 					json.name = `sessions-${quality || 'oss-dev'}`;
 					return json;
@@ -402,7 +402,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			: undefined;
 
 		const productSubJsonStream = embedded
-			? gulp.src(['product.json'], { base: '.' })
+			? gulp.src(['product.json'], {  base: '.' , encoding: false })
 				.pipe(jsonEditor((json: Record<string, unknown>) => {
 					Object.keys(embedded).forEach(key => {
 						json[key] = embedded[key as keyof EmbeddedProductInfo];
@@ -417,14 +417,14 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 		// TODO the API should be copied to `out` during compile, not here
 		const api = gulp.src('src/vscode-dts/vscode.d.ts').pipe(rename('out/vscode-dts/vscode.d.ts'));
 
-		const telemetry = gulp.src('.build/telemetry/**', { base: '.build/telemetry', dot: true, allowEmpty: true });
+		const telemetry = gulp.src('.build/telemetry/**', {  base: '.build/telemetry', dot: true, allowEmpty: true , encoding: false });
 
 		const jsFilter = util.filter(data => !data.isDirectory() && /\.js$/.test(data.path));
 		const root = path.resolve(path.join(import.meta.dirname, '..'));
 		const productionDependencies = getProductionDependencies(root);
 		const dependenciesSrc = productionDependencies.map(d => path.relative(root, d)).map(d => [`${d}/**`, `!${d}/**/{test,tests}/**`]).flat().concat('!**/*.mk');
 
-		const deps = gulp.src(dependenciesSrc, { base: '.', dot: true })
+		const deps = gulp.src(dependenciesSrc, {  base: '.', dot: true , encoding: false })
 			.pipe(filter(['**', `!**/${config.version}/**`, '!**/bin/darwin-arm64-87/**', '!**/package-lock.json', '!**/yarn.lock', '!**/*.{js,css}.map']))
 			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, '.moduleignore')))
 			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, `.moduleignore.${process.platform}`)))
@@ -498,18 +498,18 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 				'resources/win32/code_150x150.png'
 			], { base: '.' }));
 			if (embedded) {
-				all = es.merge(all, gulp.src('resources/win32/sessions.ico', { base: '.' }));
+				all = es.merge(all, gulp.src('resources/win32/sessions.ico', {  base: '.' , encoding: false }));
 			}
 		} else if (platform === 'linux') {
-			const policyDest = gulp.src('.build/policies/linux/**', { base: '.build/policies/linux' })
+			const policyDest = gulp.src('.build/policies/linux/**', {  base: '.build/policies/linux' , encoding: false })
 				.pipe(rename(f => f.dirname = `policies/${f.dirname}`));
-			all = es.merge(all, gulp.src('resources/linux/code.png', { base: '.' }), policyDest);
+			all = es.merge(all, gulp.src('resources/linux/code.png', {  base: '.' , encoding: false }), policyDest);
 		} else if (platform === 'darwin') {
 			const shortcut = gulp.src('resources/darwin/bin/code.sh')
 				.pipe(replace('@@APPNAME@@', product.applicationName))
 				.pipe(replace('@@NAME@@', product.nameShort))
 				.pipe(rename('bin/code'));
-			const policyDest = gulp.src('.build/policies/darwin/**', { base: '.build/policies/darwin' })
+			const policyDest = gulp.src('.build/policies/darwin/**', {  base: '.build/policies/darwin' , encoding: false })
 				.pipe(rename(f => f.dirname = `policies/${f.dirname}`));
 			all = es.merge(all, shortcut, policyDest);
 		}
@@ -542,25 +542,25 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			], { dot: true }));
 
 		if (platform === 'linux') {
-			result = es.merge(result, gulp.src('resources/completions/bash/code', { base: '.' })
+			result = es.merge(result, gulp.src('resources/completions/bash/code', {  base: '.' , encoding: false })
 				.pipe(replace('@@APPNAME@@', product.applicationName))
 				.pipe(rename(function (f) { f.basename = product.applicationName; })));
 
-			result = es.merge(result, gulp.src('resources/completions/zsh/_code', { base: '.' })
+			result = es.merge(result, gulp.src('resources/completions/zsh/_code', {  base: '.' , encoding: false })
 				.pipe(replace('@@APPNAME@@', product.applicationName))
 				.pipe(rename(function (f) { f.basename = '_' + product.applicationName; })));
 		}
 
 		if (platform === 'win32') {
-			result = es.merge(result, gulp.src('resources/win32/bin/code.js', { base: 'resources/win32', allowEmpty: true }));
+			result = es.merge(result, gulp.src('resources/win32/bin/code.js', {  base: 'resources/win32', allowEmpty: true , encoding: false }));
 
 			if (useVersionedUpdate) {
-				result = es.merge(result, gulp.src('resources/win32/versioned/bin/code.cmd', { base: 'resources/win32/versioned' })
+				result = es.merge(result, gulp.src('resources/win32/versioned/bin/code.cmd', {  base: 'resources/win32/versioned' , encoding: false })
 					.pipe(replace('@@NAME@@', product.nameShort))
 					.pipe(replace('@@VERSIONFOLDER@@', versionedResourcesFolder))
 					.pipe(rename(function (f) { f.basename = product.applicationName; })));
 
-				result = es.merge(result, gulp.src('resources/win32/versioned/bin/code.sh', { base: 'resources/win32/versioned' })
+				result = es.merge(result, gulp.src('resources/win32/versioned/bin/code.sh', {  base: 'resources/win32/versioned' , encoding: false })
 					.pipe(replace('@@NAME@@', product.nameShort))
 					.pipe(replace('@@PRODNAME@@', product.nameLong))
 					.pipe(replace('@@VERSION@@', version))
@@ -571,11 +571,11 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 					.pipe(replace('@@QUALITY@@', quality!))
 					.pipe(rename(function (f) { f.basename = product.applicationName; f.extname = ''; })));
 			} else {
-				result = es.merge(result, gulp.src('resources/win32/bin/code.cmd', { base: 'resources/win32' })
+				result = es.merge(result, gulp.src('resources/win32/bin/code.cmd', {  base: 'resources/win32' , encoding: false })
 					.pipe(replace('@@NAME@@', product.nameShort))
 					.pipe(rename(function (f) { f.basename = product.applicationName; })));
 
-				result = es.merge(result, gulp.src('resources/win32/bin/code.sh', { base: 'resources/win32' })
+				result = es.merge(result, gulp.src('resources/win32/bin/code.sh', {  base: 'resources/win32' , encoding: false })
 					.pipe(replace('@@NAME@@', product.nameShort))
 					.pipe(replace('@@PRODNAME@@', product.nameLong))
 					.pipe(replace('@@VERSION@@', version))
@@ -586,17 +586,17 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 					.pipe(rename(function (f) { f.basename = product.applicationName; f.extname = ''; })));
 			}
 
-			result = es.merge(result, gulp.src('resources/win32/VisualElementsManifest.xml', { base: 'resources/win32' })
+			result = es.merge(result, gulp.src('resources/win32/VisualElementsManifest.xml', {  base: 'resources/win32' , encoding: false })
 				.pipe(rename(product.nameShort + '.VisualElementsManifest.xml')));
 
-			result = es.merge(result, gulp.src('.build/policies/win32/**', { base: '.build/policies/win32' })
+			result = es.merge(result, gulp.src('.build/policies/win32/**', {  base: '.build/policies/win32' , encoding: false })
 				.pipe(rename(f => f.dirname = `policies/${f.dirname}`)));
 
 			if (quality === 'stable' || quality === 'insider') {
-				result = es.merge(result, gulp.src('.build/win32/appx/**', { base: '.build/win32' }));
+				result = es.merge(result, gulp.src('.build/win32/appx/**', {  base: '.build/win32' , encoding: false }));
 				const rawVersion = version.replace(/-\w+$/, '').split('.');
 				const appxVersion = `${rawVersion[0]}.0.${rawVersion[1]}.${rawVersion[2]}`;
-				result = es.merge(result, gulp.src('resources/win32/appx/AppxManifest.xml', { base: '.' })
+				result = es.merge(result, gulp.src('resources/win32/appx/AppxManifest.xml', {  base: '.' , encoding: false })
 					.pipe(replace('@@AppxPackageName@@', product.win32AppUserModelId))
 					.pipe(replace('@@AppxPackageVersion@@', appxVersion))
 					.pipe(replace('@@AppxPackageDisplayName@@', product.nameLong))
@@ -609,7 +609,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 					.pipe(rename(f => f.dirname = `appx/manifest`)));
 			}
 		} else if (platform === 'linux') {
-			result = es.merge(result, gulp.src('resources/linux/bin/code.sh', { base: '.' })
+			result = es.merge(result, gulp.src('resources/linux/bin/code.sh', {  base: '.' , encoding: false })
 				.pipe(replace('@@PRODNAME@@', product.nameLong))
 				.pipe(replace('@@APPNAME@@', product.applicationName))
 				.pipe(rename('bin/' + product.applicationName)));
