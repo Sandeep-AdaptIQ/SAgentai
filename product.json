@@ -118,6 +118,7 @@
 			}
 		}
 	],
+	"extensionsEnabledWithApiProposalVersion": ["GitHub.copilot-chat"],
 	"defaultChatAgent": {
 		"extensionId": "GitHub.copilot",
 		"chatExtensionId": "GitHub.copilot-chat",
