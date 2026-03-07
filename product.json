@@ -143,12 +143,12 @@
 		"mcpRegistryDataUrl": "https://api.github.com/copilot/mcp_registry"
 	},
 	"extensionsGallery": {
-		"serviceUrl": "https://open-vsx.org/vscode/gallery",
-		"itemUrl": "https://open-vsx.org/vscode/item",
-		"controlUrl": "",
-		"extensionUrlTemplate": "https://open-vsx.org/extension/{publisher}/{name}",
-		"resourceUrlTemplate": "https://open-vsx.org/vscode/unpkg/{publisher}/{name}/{version}/{path}",
-		"nlsBaseUrl": ""
+		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+		"itemUrl": "https://marketplace.visualstudio.com/items",
+		"controlUrl": "https://az764295.vo.msecnd.net/extensions/marketplace.json",
+		"extensionUrlTemplate": "https://marketplace.visualstudio.com/items?itemName={publisher}.{name}",
+		"resourceUrlTemplate": "https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}",
+		"nlsBaseUrl": "https://az764295.vo.msecnd.net/extensions/"
 	},
 	"defaultGalleryExtensions": [
 		"salesforce.salesforcedx-vscode",
