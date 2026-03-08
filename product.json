@@ -84,8 +84,41 @@
 				},
 				"publisherDisplayName": "Microsoft"
 			}
+		},
+		{
+			"name": "GitHub.vscode-pull-request-github",
+			"version": "0.130.0",
+			"sha256": "ab4d535881ebca6f20aab3e5c8fd001e7c3657488c578bc8a96ceb515d54887d",
+			"repo": "https://github.com/microsoft/vscode-pull-request-github",
+			"metadata": {
+				"id": "69ddd764-339a-4ecc-97c1-9c4ece58e36d",
+				"publisherId": {
+					"publisherId": "7c1c19cd-78eb-4dfb-8999-99caf7679002",
+					"publisherName": "GitHub",
+					"displayName": "GitHub",
+					"flags": "verified"
+				},
+				"publisherDisplayName": "GitHub"
+			}
+		},
+		{
+			"name": "GitHub.copilot-chat",
+			"version": "0.38.2",
+			"sha256": "a25c8d9650403d0a3b6706d3409dc68d185291f67f891bf88d733be215e33703",
+			"repo": "https://github.com/microsoft/vscode-copilot-release",
+			"metadata": {
+				"id": "7ec7d6e6-b89e-4cc5-a59b-d6c4d238246f",
+				"publisherId": {
+					"publisherId": "7c1c19cd-78eb-4dfb-8999-99caf7679002",
+					"publisherName": "GitHub",
+					"displayName": "GitHub",
+					"flags": "verified"
+				},
+				"publisherDisplayName": "GitHub"
+			}
 		}
 	],
+	"extensionsEnabledWithApiProposalVersion": ["GitHub.copilot-chat"],
 	"defaultChatAgent": {
 		"extensionId": "GitHub.copilot",
 		"chatExtensionId": "GitHub.copilot-chat",
@@ -143,12 +176,12 @@
 		"mcpRegistryDataUrl": "https://api.github.com/copilot/mcp_registry"
 	},
 	"extensionsGallery": {
-		"serviceUrl": "https://open-vsx.org/vscode/gallery",
-		"itemUrl": "https://open-vsx.org/vscode/item",
-		"controlUrl": "",
-		"extensionUrlTemplate": "https://open-vsx.org/extension/{publisher}/{name}",
-		"resourceUrlTemplate": "https://open-vsx.org/vscode/unpkg/{publisher}/{name}/{version}/{path}",
-		"nlsBaseUrl": ""
+		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+		"itemUrl": "https://marketplace.visualstudio.com/items",
+		"controlUrl": "https://az764295.vo.msecnd.net/extensions/marketplace.json",
+		"extensionUrlTemplate": "https://marketplace.visualstudio.com/items?itemName={publisher}.{name}",
+		"resourceUrlTemplate": "https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}",
+		"nlsBaseUrl": "https://az764295.vo.msecnd.net/extensions/"
 	},
 	"defaultGalleryExtensions": [
 		"salesforce.salesforcedx-vscode",

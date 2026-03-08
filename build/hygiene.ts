@@ -37,11 +37,8 @@ export function hygiene(some: NodeJS.ReadWriteStream | string[] | undefined, run
 	const productJson = es.through(function (file: VinylFile) {
 		const product = JSON.parse(file.contents!.toString('utf8'));
 
-		// SAgentai fork: extensionsGallery is intentionally in product.json (Open VSX)
-		if (product.extensionsGallery && product.extensionsGallery.serviceUrl?.includes('visualstudio.com')) {
-			console.error(`product.json: Contains Microsoft Marketplace 'extensionsGallery' — use Open VSX`);
-			errorCount++;
-		}
+		// SAgentai fork: extensionsGallery can use either Open VSX or Microsoft Marketplace
+		// No validation required - both are supported
 
 		this.emit('data', file);
 	});

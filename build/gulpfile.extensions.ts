@@ -123,7 +123,7 @@ const tasks = compilations.map(function (tsconfigFile) {
 	const srcRoot = path.dirname(tsconfigFile);
 	const srcBase = path.join(srcRoot, 'src');
 	const src = path.join(srcBase, '**');
-	const srcOpts = { cwd: root, base: srcBase, dot: true };
+	const srcOpts = { cwd: root, base: srcBase, dot: true, encoding: false };
 
 	const out = path.join(srcRoot, 'out');
 	const baseUrl = getBaseUrl(out);
