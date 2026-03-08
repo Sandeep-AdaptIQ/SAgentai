@@ -505,7 +505,23 @@ export class ChatService extends Disposable implements IChatService {
 			});
 		}
 
-		const defaultAgent = this.chatAgentService.getActivatedAgents().find(agent => agent.id === defaultAgentData.id);
+		// The agent implementation may be registered asynchronously after activation.
+		// Wait up to 5 seconds for the agent to appear in getActivatedAgents().
+		let defaultAgent = this.chatAgentService.getActivatedAgents().find(agent => agent.id === defaultAgentData.id);
+		if (!defaultAgent) {
+			await Promise.race([
+				new Promise<void>(resolve => {
+					const disposable = this.chatAgentService.onDidChangeAgents(() => {
+						if (this.chatAgentService.getActivatedAgents().find(a => a.id === defaultAgentData.id)) {
+							disposable.dispose();
+							resolve();
+						}
+					});
+				}),
+				new Promise<void>(resolve => setTimeout(resolve, 5000))
+			]);
+			defaultAgent = this.chatAgentService.getActivatedAgents().find(agent => agent.id === defaultAgentData.id);
+		}
 		if (!defaultAgent) {
 			throw new ErrorNoTelemetry('No default agent registered');
 		}
