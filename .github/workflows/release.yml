@@ -147,7 +147,7 @@ jobs:
           Get-ChildItem $StagingDir | Format-Table Name, @{N='Size(MB)';E={[math]::Round($_.Length/1MB,1)}}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-installers
           path: .build/release-staging/*
@@ -337,7 +337,7 @@ jobs:
           ls -lh "$STAGING"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux-packages
           path: .build/release-staging/*
