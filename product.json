@@ -100,22 +100,6 @@
 				},
 				"publisherDisplayName": "GitHub"
 			}
-		},
-		{
-			"name": "GitHub.copilot-chat",
-			"version": "0.40.0",
-			"sha256": "a25c8d9650403d0a3b6706d3409dc68d185291f67f891bf88d733be215e33703",
-			"repo": "https://github.com/microsoft/vscode-copilot-release",
-			"metadata": {
-				"id": "7ec7d6e6-b89e-4cc5-a59b-d6c4d238246f",
-				"publisherId": {
-					"publisherId": "7c1c19cd-78eb-4dfb-8999-99caf7679002",
-					"publisherName": "GitHub",
-					"displayName": "GitHub",
-					"flags": "verified"
-				},
-				"publisherDisplayName": "GitHub"
-			}
 		}
 	],
 	"extensionsEnabledWithApiProposalVersion": ["GitHub.copilot-chat"],

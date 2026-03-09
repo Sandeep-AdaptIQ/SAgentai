@@ -415,6 +415,7 @@ const excludedExtensions = [
 	'vscode-test-resolver',
 	'ms-vscode.node-debug',
 	'ms-vscode.node-debug2',
+	'GitHub.copilot-chat', // pre-built, copied directly by gulpfile.vscode.ts
 ];
 
 const marketplaceWebExtensionsExclude = new Set([
