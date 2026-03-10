@@ -43,7 +43,7 @@ export class ExtensionsProposedApi {
 		if (productService.extensionEnabledApiProposals) {
 			for (const [k, value] of Object.entries(productService.extensionEnabledApiProposals)) {
 				const key = ExtensionIdentifier.toKey(k);
-				const proposalNames = value.filter(name => {
+				const proposalNames = value.map(name => name.split('@')[0]).filter(name => {
 					if (!allApiProposals[<ApiProposalName>name]) {
 						_logService.warn(`Via 'product.json#extensionEnabledApiProposals' extension '${key}' wants API proposal '${name}' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.`);
 						return false;

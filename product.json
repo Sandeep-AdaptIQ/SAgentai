@@ -100,22 +100,6 @@
 				},
 				"publisherDisplayName": "GitHub"
 			}
-		},
-		{
-			"name": "GitHub.copilot-chat",
-			"version": "0.38.2",
-			"sha256": "a25c8d9650403d0a3b6706d3409dc68d185291f67f891bf88d733be215e33703",
-			"repo": "https://github.com/microsoft/vscode-copilot-release",
-			"metadata": {
-				"id": "7ec7d6e6-b89e-4cc5-a59b-d6c4d238246f",
-				"publisherId": {
-					"publisherId": "7c1c19cd-78eb-4dfb-8999-99caf7679002",
-					"publisherName": "GitHub",
-					"displayName": "GitHub",
-					"flags": "verified"
-				},
-				"publisherDisplayName": "GitHub"
-			}
 		}
 	],
 	"extensionsEnabledWithApiProposalVersion": ["GitHub.copilot-chat"],
@@ -190,5 +174,67 @@
 	"trustedExtensionAuthAccess": {
 		"github": ["GitHub.copilot-chat"],
 		"github-enterprise": ["GitHub.copilot-chat"]
+	},
+	"extensionEnabledApiProposals": {
+		"GitHub.copilot-chat": [
+			"agentSessionsWorkspace",
+			"chatDebug@2",
+			"chatHooks@6",
+			"extensionsAny",
+			"newSymbolNamesProvider",
+			"interactive",
+			"codeActionAI",
+			"activeComment",
+			"commentReveal",
+			"contribCommentThreadAdditionalMenu",
+			"contribCommentsViewThreadMenus",
+			"contribChatEditorInlineGutterMenu",
+			"documentFiltersExclusive",
+			"embeddings",
+			"findTextInFiles",
+			"findTextInFiles2",
+			"languageModelToolSupportsModel@1",
+			"findFiles2@2",
+			"textSearchProvider",
+			"terminalDataWriteEvent",
+			"terminalExecuteCommandEvent",
+			"terminalSelection",
+			"terminalQuickFixProvider",
+			"mappedEditsProvider",
+			"aiRelatedInformation",
+			"aiSettingsSearch",
+			"chatParticipantAdditions@3",
+			"defaultChatParticipant@4",
+			"contribSourceControlInputBoxMenu",
+			"authLearnMore",
+			"testObserver",
+			"aiTextSearchProvider@2",
+			"chatParticipantPrivate@15",
+			"chatProvider@4",
+			"contribDebugCreateConfiguration",
+			"chatReferenceDiagnostic",
+			"textSearchProvider2",
+			"chatReferenceBinaryData",
+			"languageModelSystem",
+			"languageModelCapabilities",
+			"inlineCompletionsAdditions",
+			"chatStatusItem",
+			"taskProblemMatcherStatus",
+			"contribLanguageModelToolSets",
+			"textDocumentChangeReason",
+			"resolvers",
+			"taskExecutionTerminal",
+			"dataChannels",
+			"languageModelThinkingPart",
+			"chatSessionsProvider@3",
+			"devDeviceId",
+			"contribEditorContentMenu",
+			"chatPromptFiles",
+			"mcpServerDefinitions",
+			"tabInputMultiDiff",
+			"workspaceTrust",
+			"environmentPower",
+			"terminalTitle"
+		]
 	}
 }
