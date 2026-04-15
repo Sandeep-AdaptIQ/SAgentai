@@ -39,7 +39,7 @@ function Get-LatestVersion {
 		return $result.results[0].extensions[0].versions[0].version
 	}
  catch {
-		Write-Warning "Failed to query version for $publisher.$name: $_"
+		Write-Warning "Failed to query version for ${publisher}.${name}: $_"
 		return $null
 	}
 }
@@ -91,3 +91,4 @@ Get-ChildItem -Path $OutputDir -Filter "*.vsix" | ForEach-Object {
 	$sizeMB = [math]::Round($_.Length / 1MB, 1)
 	Write-Host "  $($_.Name) ($sizeMB MB)"
 }
+
