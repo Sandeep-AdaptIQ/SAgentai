@@ -1,3 +1,57 @@
+# GitHub Copilot Chat in VS Code - Changelog
+
+You can find the latest AI-related updates for GitHub Copilot in VS Code in the weekly [VS Code release notes](https://code.visualstudio.com/updates).
+
+For more frequent updates, check the [Commit log](https://github.com/Microsoft/vscode/commits/main) and [vscode-copilot-chat commit log](https://github.com/microsoft/vscode-copilot-chat/commits/main) on GitHub.
+
+---
+
+# Past updates
+
+## 0.41 (2026-03-25)
+
+GitHub Copilot updates for [VS Code 1.113](https://code.visualstudio.com/updates/v1_113):
+
+- MCP support in Copilot CLI & Claude agents
+- Forking sessions in Copilot CLI & Claude agents
+- Agent debug logs for Copilot CLI and Claude CLI sessions (Preview)
+- Claude session listing powered by SDK APIs
+- Nested subagents
+- Manage plugin marketplaces
+- URL handlers for plugin installation
+- Chat Customizations editor (Preview)
+- Configurable thinking effort in model picker
+- Images preview for chat attachments
+
+## 0.40 (2026-03-18)
+
+GitHub Copilot updates for [VS Code 1.112](https://code.visualstudio.com/updates/v1_112):
+
+- Message steering and queueing in Copilot CLI
+- Preview changes before delegating to Copilot CLI
+- Clickable file links in Copilot CLI terminal output
+- Permissions levels in Copilot CLI
+- Troubleshoot agent behavior with /troubleshoot (Preview)
+- Export and import agent debug logs (Preview)
+- Image and binary file support for agents
+- Automatic symbol references on paste in chat
+- Customizations discovery in parent repositories
+- Sandbox locally running MCP servers (Linux and macOS)
+- Improved UI for MCP Elicitation
+- Enable or disable plugins and MCP servers
+- Automatic plugin updates
+
+
+## 0.39 (2026-03-09)
+
+GitHub Copilot updates for [VS Code 1.111](https://code.visualstudio.com/updates/v1_111):
+
+- Autopilot and agent permissions
+- Agent-scoped hooks (Preview)
+- Debug events snapshot
+- Chat tip improvements
+- AI CLI profile group in terminal dropdown (Experimental)
+
 ## 0.38 (2026-03-05)
 
 GitHub Copilot updates from [February 2026](https://code.visualstudio.com/updates/v1_110):
@@ -1087,7 +1141,7 @@ Selecting **Modes** shows all currently installed custom modes and enables you t
 
 You can now import a chat mode file from an external link, such as a gist. For example, the following link will import the chat mode file for Burke's GPT 4.1 Beast Mode:
 
-[Burke's GPT 4.1 Beast Mode (VS Code)](vscode:chat-mode/install?url=https://gist.githubusercontent.com/burkeholland/a232b706994aa2f4b2ddd3d97b11f9a7/raw/6e497f4b4ef5e7ea36787ef38fdf4385433591c1/4.1.chatmode.md)
+[Burke's GPT 4.1 Beast Mode (VS Code)](https://github.com/microsoft/vscode-copilot-chat/blob/HEAD/vscode:chat-mode/install?url=https:/gist.githubusercontent.com/burkeholland/a232b706994aa2f4b2ddd3d97b11f9a7/raw/6e497f4b4ef5e7ea36787ef38fdf4385433591c1/4.1.chatmode.md)
 
 This will prompt for a destination folder and a name for the mode and then import the mode file from the URL in the link. The same mechanism is also available for prompt and instruction files.
 
@@ -1768,7 +1822,7 @@ The following example shows a prompt file for generating release notes, that run
 mode: 'agent'
 tools: ['getCurrentMilestone', 'getReleaseFeatures', 'file_search', 'semantic_search', 'read_file', 'insert_edit_into_file', 'create_file', 'replace_string_in_file', 'fetch_webpage', 'vscode_search_extensions_internal']
 ---
-Generate release notes for the features I worked in the current release and update them in the release notes file. Use [release notes writing instructions file](.github/instructions/release-notes-writing.instructions.md) as a guide.
+Generate release notes for the features I worked in the current release and update them in the release notes file. Use [release notes writing instructions file](https://github.com/microsoft/vscode-copilot-chat/blob/HEAD/.github/instructions/release-notes-writing.instructions.md) as a guide.
 ```
 
 To create a prompt file, use the **Chat: New Prompt File...** command from the Command Palette.
@@ -1817,7 +1871,7 @@ Use `#extensions` tool to find extensions from the Marketplace. This tool is ava
 
 #### Improvements to the web page fetch tool
 
-Last month, we introduced the `#fetch` tool, which allows you to fetch the contents of a web page right from chat to include as context for your prompt. If you missed that release note, check out [the initial release of the fetch tool](v1_99.md#fetch-tool) release note and examples.
+Last month, we introduced the `#fetch` tool, which allows you to fetch the contents of a web page right from chat to include as context for your prompt. If you missed that release note, check out [the initial release of the fetch tool](https://github.com/microsoft/vscode-copilot-chat/blob/HEAD/v1_99.md#fetch-tool) release note and examples.
 
 This iteration, we have made several big changes to the tool including:
 
